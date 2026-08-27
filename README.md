@@ -1,0 +1,1 @@
+Built an end-to-end HR Analytics Dashboard in Power BI by cleaning and transforming a messy HR dataset using Power Query and DAX. Developed interactive visualizations to analyze employee demographics, job satisfaction, promotion eligibility, layoff risk, workforce distribution, and departmental performance, enabling data-driven HR decision-making.
