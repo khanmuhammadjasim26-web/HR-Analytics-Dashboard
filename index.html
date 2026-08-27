@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Analytics Dashboard - Power BI Project by Muhammad Jasim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-glow: rgba(37, 99, 235, 0.35);
+            --bg: #0F172A;
+            --card-bg: #1E293B;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --accent-green: #10B981;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
+            --accent-purple: #8B5CF6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Hero Section */
+        header {
+            padding: 4rem 0 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, rgba(15, 23, 42, 0) 70%);
+            pointer-events: none;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(37, 99, 235, 0.15);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            color: #60A5FA;
+            padding: 0.35rem 0.9rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #FFFFFF, #93C5FD);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lead {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 760px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+            transform: translateY(-2px);
+        }
+
+        /* Metrics Row */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin: 3rem 0;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(37, 99, 235, 0.4);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .val-green { color: var(--accent-green); }
+        .val-blue { color: #60A5FA; }
+        .val-amber { color: var(--accent-amber); }
+        .val-purple { color: var(--accent-purple); }
+
+        /* Report Structure */
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .page-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.75rem;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-icon {
+            font-size: 1.5rem;
+            background: rgba(37, 99, 235, 0.1);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .feature-list li {
+            padding: 0.4rem 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        /* Datasets & Downloads */
+        .data-table-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 3.5rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+
+        .link-btn {
+            color: #60A5FA;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 2.5rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Hero -->
+    <header>
+        <div class="container">
+            <div class="badge">📊 Power BI Data Analytics Project</div>
+            <h1>HR Analytics & Workforce Intelligence Dashboard</h1>
+            <p class="lead">
+                Built in Microsoft Power BI by <b>Muhammad Jasim</b>. Features comprehensive workforce demographics, attrition root causes, retrenchment risk modeling, and promotion pipeline tracking.
+            </p>
+            <div class="btn-group">
+                <a href="https://github.com/khanmuhammadjasim26-web/HR-Analytics-Dashboard/raw/main/Power%20Bi%20Practice%20Dashboard.pbix" class="btn btn-primary">
+                    📥 Download Power BI Dashboard (.pbix)
+                </a>
+                <a href="https://github.com/khanmuhammadjasim26-web/HR-Analytics-Dashboard" class="btn btn-secondary">
+                    ⭐ View GitHub Repository
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Key Project Metrics -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Employees</div>
+                <div class="metric-value val-blue">1,470</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Report Pages</div>
+                <div class="metric-value">3</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Promotion Pipeline</div>
+                <div class="metric-value val-green">72</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Retrenchment Risk</div>
+                <div class="metric-value val-amber">117</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">DAX Measures</div>
+                <div class="metric-value val-purple">15</div>
+            </div>
+        </section>
+
+        <!-- Power BI Report Pages -->
+        <section>
+            <h2 class="section-title">📊 Dashboard Structure</h2>
+            <p class="section-subtitle">The Power BI workbook is organized into 3 purpose-built operational reporting pages:</p>
+
+            <div class="pages-grid">
+                <!-- Page 1 -->
+                <div class="page-card">
+                    <div class="page-header">
+                        <div class="page-icon">🏠</div>
+                        <div>
+                            <div class="page-title">1. Home Page</div>
+                            <span style="font-size:0.8rem; color:#64748B;">35 Visual Components</span>
+                        </div>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">
+                        High-level executive workforce overview and demographic breakdown.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Total Employee headcount & gender split</li>
+                        <li>Department distribution & headcount share</li>
+                        <li>Promotion readiness breakdown</li>
+                        <li>Job satisfaction level distribution</li>
+                    </ul>
+                </div>
+
+                <!-- Page 2 -->
+                <div class="page-card">
+                    <div class="page-header">
+                        <div class="page-icon">⚡</div>
+                        <div>
+                            <div class="page-title">2. Action Page</div>
+                            <span style="font-size:0.8rem; color:#64748B;">19 Visual Components</span>
+                        </div>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">
+                        Operational decision rosters for HR management and department heads.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Employees due for promotion action list</li>
+                        <li>Retrenchment risk monitoring roster</li>
+                        <li>Departmental & Gender slice filters</li>
+                        <li>Service tenure metrics</li>
+                    </ul>
+                </div>
+
+                <!-- Page 3 -->
+                <div class="page-card">
+                    <div class="page-header">
+                        <div class="page-icon">📋</div>
+                        <div>
+                            <div class="page-title">3. Details Page</div>
+                            <span style="font-size:0.8rem; color:#64748B;">28 Visual Components</span>
+                        </div>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">
+                        Granular talent analysis and operational performance metrics.
+                    </p>
+                    <ul class="feature-list">
+                        <li>High-rated vs. low-rated employee percentages</li>
+                        <li>OverTime workload distributions</li>
+                        <li>Role-by-role compensation & level matrix</li>
+                        <li>Individual employee service breakdowns</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Datasets & Downloads -->
+        <section>
+            <h2 class="section-title">📁 Project Datasets & Files</h2>
+            <p class="section-subtitle">All original data sources and assets hosted directly on GitHub:</p>
+
+            <div class="data-table-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Power Bi Practice Dashboard.pbix</b></td>
+                                <td><span style="color:#F59E0B; font-weight:600;">Power BI</span></td>
+                                <td>Full Power BI Desktop workbook with DAX & visuals</td>
+                                <td><a href="https://github.com/khanmuhammadjasim26-web/HR-Analytics-Dashboard/raw/main/Power%20Bi%20Practice%20Dashboard.pbix" class="link-btn">Download (.pbix)</a></td>
+                            </tr>
+                            <tr>
+                                <td><b>HR Analytics Data.csv</b></td>
+                                <td>CSV (Tab-Sep)</td>
+                                <td>1,470 employee records across 35 features</td>
+                                <td><a href="https://raw.githubusercontent.com/khanmuhammadjasim26-web/HR-Analytics-Dashboard/main/HR%20Analytics%20Data.csv" class="link-btn" target="_blank">View Raw</a></td>
+                            </tr>
+                            <tr>
+                                <td><b>HR employee data.csv</b></td>
+                                <td>CSV</td>
+                                <td>Employee ID to Employee Name mapping table</td>
+                                <td><a href="https://raw.githubusercontent.com/khanmuhammadjasim26-web/HR-Analytics-Dashboard/main/HR%20employee%20data.csv" class="link-btn" target="_blank">View Raw</a></td>
+                            </tr>
+                            <tr>
+                                <td><b>data.csv Retrenchment.csv</b></td>
+                                <td>CSV</td>
+                                <td>Retrenchment risk records (117 flagged employees)</td>
+                                <td><a href="https://raw.githubusercontent.com/khanmuhammadjasim26-web/HR-Analytics-Dashboard/main/data.csv%20Retrenchment.csv" class="link-btn" target="_blank">View Raw</a></td>
+                            </tr>
+                            <tr>
+                                <td><b>data.csv promomtion.csv</b></td>
+                                <td>CSV</td>
+                                <td>Promotion pipeline records (72 eligible employees)</td>
+                                <td><a href="https://raw.githubusercontent.com/khanmuhammadjasim26-web/HR-Analytics-Dashboard/main/data.csv%20promomtion.csv" class="link-btn" target="_blank">View Raw</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Use in Power BI Desktop -->
+        <section style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:2rem; margin-bottom:3.5rem;">
+            <h2 class="section-title" style="font-size:1.4rem;">💡 How to Open & Refresh in Power BI Desktop</h2>
+            <ol style="margin-left:1.5rem; color:var(--text-muted); line-height:1.8; margin-top:1rem;">
+                <li>Download the repository ZIP or the <code>.pbix</code> file above.</li>
+                <li>Open <b>Power Bi Practice Dashboard.pbix</b> in <b>Power BI Desktop</b>.</li>
+                <li>To connect to local CSV files on your machine: Click <b>Home</b> &rarr; <b>Transform Data</b> &rarr; <b>Data Source Settings</b> &rarr; <b>Change Source</b> and point to your local CSV directory.</li>
+            </ol>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>HR Analytics Dashboard &bull; Created by <b>Muhammad Jasim</b> &bull; Hosted on GitHub</p>
+        </div>
+    </footer>
+
+</body>
+</html>
