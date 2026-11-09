@@ -1,0 +1,7 @@
+# Treat HTML showcase as documentation so Linguist does not classify repo as HTML
+*.html linguist-documentation=true
+*.html linguist-detectable=false
+
+# Treat DAX measures as the primary language
+*.dax linguist-detectable=true
+*.dax linguist-language=DAX
