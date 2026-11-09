@@ -1,0 +1,89 @@
+// ==============================================================================
+// Power BI DAX Measures & Workforce Intelligence
+// Project: End-to-End HR Analytics Dashboard
+// Author: Mohd Jasim Khan
+// ==============================================================================
+
+// --- Headcount & Demographics ---
+Total Employees = COUNTROWS('HR Analytics Data')
+
+Active Employees = 
+CALCULATE(
+    COUNTROWS('HR Analytics Data'),
+    'HR Analytics Data'[Attrition] = "No"
+)
+
+Total Exited Employees = 
+CALCULATE(
+    COUNTROWS('HR Analytics Data'),
+    'HR Analytics Data'[Attrition] = "Yes"
+)
+
+Attrition Rate = 
+DIVIDE(
+    [Total Exited Employees],
+    [Total Employees],
+    0
+)
+
+Male Employees = 
+CALCULATE(
+    COUNTROWS('HR Analytics Data'),
+    'HR Analytics Data'[Gender] = "Male"
+)
+
+Female Employees = 
+CALCULATE(
+    COUNTROWS('HR Analytics Data'),
+    'HR Analytics Data'[Gender] = "Female"
+)
+
+% Male = DIVIDE([Male Employees], [Total Employees], 0)
+% Female = DIVIDE([Female Employees], [Total Employees], 0)
+
+// --- Performance Ratings & Compensation ---
+High Rated Employees = 
+CALCULATE(
+    COUNTROWS('HR Analytics Data'),
+    'HR Analytics Data'[PerformanceRating] >= 4
+)
+
+Low Rated Employees = 
+CALCULATE(
+    COUNTROWS('HR Analytics Data'),
+    'HR Analytics Data'[PerformanceRating] <= 2
+)
+
+% High Rated = DIVIDE([High Rated Employees], [Total Employees], 0)
+% Low Rated = DIVIDE([Low Rated Employees], [Total Employees], 0)
+
+Average Monthly Income = AVERAGE('HR Analytics Data'[MonthlyIncome])
+
+Average Years At Company = AVERAGE('HR Analytics Data'[YearsAtCompany])
+
+// --- Promotion & Retrenchment Planning ---
+Eligible For Promotion Count = 
+CALCULATE(
+    COUNTROWS('data.csv promomtion'),
+    NOT(ISBLANK('data.csv promomtion'[Emplyee name]))
+)
+
+Retrenchment Risk Count = 
+CALCULATE(
+    COUNTROWS('data.csv Retrenchment'),
+    NOT(ISBLANK('data.csv Retrenchment'[Emplyee name]))
+)
+
+Promotion Eligibility % = 
+DIVIDE(
+    [Eligible For Promotion Count],
+    [Total Employees],
+    0
+)
+
+Retrenchment Risk % = 
+DIVIDE(
+    [Retrenchment Risk Count],
+    [Total Employees],
+    0
+)
